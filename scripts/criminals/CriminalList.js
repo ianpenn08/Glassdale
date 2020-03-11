@@ -1,24 +1,44 @@
 
-import { useCriminals, getCriminals } from "./CriminalProvider.js"
+import { useCriminals} from "./CriminalProvider.js";
 import Criminal from "./Criminal.js";
 
 const contentTarget = document.querySelector(".criminalsContainer")
+const eventHub = document.querySelector(".container")
 
-const criminalList = () => {
+// Listen for the custom event you dispatched in ConvictionSelect
+eventHub.addEventListener("crimeChosen", event => {
+    // Filter the list of criminal who committed the crime
 
-getCriminals().then(() => {
-    const criminalObjectsArray = useCriminals()
+    // Get the criminals
+    const criminals = useCriminals()
 
-    for (const criminalObject of criminalObjectsArray) {
-        // Convert each object to HTML representation
-        const criminalHTMLRepresentation = Criminal(criminalObject)
-        // Put HTML in DOM
-        contentTarget.innerHTML += criminalHTMLRepresentation
+    // Get the crime
+    const theCrimeThatWasChosen = event.detail.chosenCrime
 
+    // Look at all of the criminals and determine if each one is a vandal
+    const guiltyCriminals = criminals.filter(criminal => {
+        if (criminal.conviction === theCrimeThatWasChosen) {
+            return true
+        }
+        return false
+    })
+
+    // Clear inner HTML of the criminal list
+    contentTarget.innerHTML = ""
+
+    // Build it up again
+    for (const singleCriminal of guiltyCriminals) {
+        contentTarget.innerHTML += Criminal(singleCriminal)
     }
 })
 
+export const CriminalList = () => {
+    const criminals = useCriminals()
 
+    for (const singleCriminal of criminals) {
+        contentTarget.innerHTML += Criminal(singleCriminal)
+    }
 }
 
-export default criminalList
+    
+
