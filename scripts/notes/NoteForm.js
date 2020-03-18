@@ -35,6 +35,7 @@ contentTarget.addEventListener("click", clickEvent => {
 })
 
 const render = () => {
+    contentTarget.classList.add("invisible")
     contentTarget.innerHTML = `
         <fieldset>
             <label for="noteText">Note:</label>
