@@ -1,19 +1,40 @@
-import { getNotes } from "./NoteDataProvider.js"
-import {useNotes} from "./NoteDataProvider.js"
+import { getNotes, useNotes } from "./NoteDataProvider.js"
 import { Note } from "./Note.js"
 
 const contentTarget = document.querySelector(".notesContainer")
 const eventHub = document.querySelector(".container")
 
+/*
+    State variables
+*/
+let visibility = false
+
+/*
+    Event handlers
+*/
 eventHub.addEventListener("noteStateChanged", customEvent => {
     render()
 })
 
 eventHub.addEventListener("allNotesClicked", customEvent => {
-    render()
+    visibility = !visibility
+
+    if (visibility) {
+        contentTarget.classList.remove("invisible")
+    }
+    else {
+        contentTarget.classList.add("invisible")
+    }
 })
 
-const render = () => {
+ const render = () => {
+    if (visibility) {
+        contentTarget.classList.remove("invisible")
+    }
+    else {
+        contentTarget.classList.add("invisible")
+    }
+
     getNotes().then(() => {
         const allTheNotes = useNotes()
 
@@ -25,8 +46,6 @@ const render = () => {
     })
 }
 
-const NoteList = () => {
+export const NotesList = () => {
     render()
 }
-
-export default NoteList
