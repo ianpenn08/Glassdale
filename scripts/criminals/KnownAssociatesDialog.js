@@ -31,7 +31,11 @@ export const KnownAssociatesDialog = (criminalObject) => {
             ${
                 criminalObject.known_associates.map(
                     (currentAssociate) => {
-                        return `<div>${currentAssociate.name}</div>`
+                        return `<div>${currentAssociate.name}</div>
+                                <ul>
+                                    <li>${currentAssociate.alibi}</li>
+                                </ul>
+                        `
                     }
                 ).join("")
             }
