@@ -6,7 +6,7 @@ import { DisplayNotesButton } from "./notes/DisplayNotesButton.js"
 import { DisplayNoteFormButton } from "./notes/DisplayNoteFormButton.js"
 import  NoteForm  from "./notes/NoteForm.js"
 import { NotesList } from "./notes/NoteList.js"
-
+import "./criminals/KnownAssociatesDialog.js"
 getCriminals().then(CriminalList)
 getConvictions().then(ConvictionSelect)
 
