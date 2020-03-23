@@ -1,51 +1,25 @@
-import { getNotes, useNotes } from "./NoteDataProvider.js"
-import { Note } from "./Note.js"
 
-const contentTarget = document.querySelector(".notesContainer")
-const eventHub = document.querySelector(".container")
+import { useNotes } from './NoteDataProvider.js'
+import { useCriminals } from '../criminals/CriminalProvider.js'
 
-/*
-    State variables
-*/
-let visibility = false
 
-/*
-    Event handlers
-*/
-eventHub.addEventListener("noteStateChanged", customEvent => {
-    render()
-})
+const render = (noteCollection, criminalCollection) => {
+    contentTarget.innerHTML = noteCollection.map(note => {
+        // Find the related criminal
+        const relatedCriminal = criminalCollection.find(criminal => criminal.id === note.criminalId)
 
-eventHub.addEventListener("allNotesClicked", customEvent => {
-    visibility = !visibility
-
-    if (visibility) {
-        contentTarget.classList.remove("invisible")
-    }
-    else {
-        contentTarget.classList.add("invisible")
-    }
-})
-
- const render = () => {
-    if (visibility) {
-        contentTarget.classList.remove("invisible")
-    }
-    else {
-        contentTarget.classList.add("invisible")
-    }
-
-    getNotes().then(() => {
-        const allTheNotes = useNotes()
-
-        contentTarget.innerHTML = allTheNotes.map(
-            currentNoteObject => {
-                return Note(currentNoteObject)
-            }
-        ).join("")
+        return `
+            <section class="note">
+                <h2>Note about ${relatedCriminal.name}</h2>
+                ${note.noteText}
+            </section>
+        `
     })
 }
 
-export const NotesList = () => {
-    render()
+export const NoteList = () => {
+    const notes = useNotes()
+    const criminals = useCriminals()
+
+    render(notes, criminals)
 }

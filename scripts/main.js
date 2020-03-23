@@ -5,7 +5,7 @@ import  ConvictionSelect  from "./convictions/ConvictionSelect.js"
 import { DisplayNotesButton } from "./notes/DisplayNotesButton.js"
 import { DisplayNoteFormButton } from "./notes/DisplayNoteFormButton.js"
 import  NoteForm  from "./notes/NoteForm.js"
-import { NotesList } from "./notes/NoteList.js"
+import { NoteList } from "./notes/NoteList.js"
 import "./criminals/KnownAssociatesDialog.js"
 getCriminals().then(CriminalList)
 getConvictions().then(ConvictionSelect)
@@ -13,5 +13,5 @@ getConvictions().then(ConvictionSelect)
 DisplayNotesButton()
 DisplayNoteFormButton()
 NoteForm()
-NotesList()
+NoteList()
 
