@@ -11,8 +11,7 @@ const dispatchStateChangeEvent = () => {
 /*
     Allow other modules to get a copy of the application state
 */
-export const useNotes = () => notes.slice()
-
+export const useNotes = () => notes.sort((c,n) => n.timestamp - c.timestamp).slice()
 /*
     Get the state of the notes from the API into the application
 */
@@ -23,6 +22,15 @@ export const getNotes = () => {
             notes = parsedNotes
         })
 }
+
+export const deleteNote = noteId => {
+    return fetch(`http://localhost:8088/notes/${noteId}`, {
+        method: "DELETE"
+    })
+        .then(getNotes)
+        .then(dispatchStateChangeEvent)
+}
+
 
 export const saveNote = note => {
     return fetch('http://localhost:8088/notes', {
