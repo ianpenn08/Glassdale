@@ -1,4 +1,4 @@
-const Criminal = (criminalObject) => {
+export const Criminal = (criminalObject) => {
 
     return `
 
@@ -14,7 +14,6 @@ const Criminal = (criminalObject) => {
      `
 }
 
-export default Criminal
 
 
 
