@@ -1,14 +1,11 @@
-const Witness = (witnessObject) => {
 
+export const Witness = witness => {
     return `
-
-    <section class="criminal">
-
-            <div> ${witnessObject.name}</div>
-            <div>Statements: ${witnessObject.statements}</div>
-            <button id="witnesses--${witnessObject.id}" class="knownDialog">Show Witnesses</button>
-    </section>
-     `
+        <section class="statement">
+            <header>
+                <h3>${witness.name}</h3>
+            </header>
+            <p>${witness.statements}</p>
+        </section>
+    `
 }
-
-export default Witness

@@ -1,8 +1,9 @@
-import { useCriminals } from "./CriminalProvider.js";
-import  Criminal  from "./Criminal.js";
+import { useCriminals, getCriminals } from "./CriminalProvider.js";
+import { Criminal } from "./Criminal.js";
 
 const contentTarget = document.querySelector(".criminalsContainer")
 const eventHub = document.querySelector(".container")
+let youCanSeeMe = true
 
 contentTarget.addEventListener("click", clickEvent => {
     if (clickEvent.target.id.startsWith("associates--")) {
@@ -21,23 +22,23 @@ contentTarget.addEventListener("click", clickEvent => {
     }
 })
 
+eventHub.addEventListener("witnessButtonClicked", customEvent => {
+    youCanSeeMe = !youCanSeeMe
+
+    youCanSeeMe
+        ? contentTarget.classList.remove("invisible")
+        : contentTarget.classList.add("invisible")
+})
+
 
 eventHub.addEventListener("crimeChosen", event => {
+    // What crime was chosen?
     const theCrimeThatWasChosen = event.detail.chosenCrime
+
+    // Get the criminals
     let criminalsToDisplay = useCriminals()
 
-    if (theCrimeThatWasChosen === "0") {
-        // Get the criminals
-
-        // Clear inner HTML of the criminal list
-        contentTarget.innerHTML = ""
-
-        // Build it up again
-        for (const singleCriminal of criminalsToDisplay) {
-            contentTarget.innerHTML += Criminal(singleCriminal)
-        }
-    }
-    else {
+    if (theCrimeThatWasChosen !== "0") {
         // Filter the list of criminal who committed the crime
         criminalsToDisplay = criminalsToDisplay.filter(criminal => {
             if (criminal.conviction === theCrimeThatWasChosen) {
@@ -46,23 +47,20 @@ eventHub.addEventListener("crimeChosen", event => {
             return false
         })
     }
-
-    // Clear inner HTML of the criminal list
-    contentTarget.innerHTML = ""
-
-    // Build it up again
-    for (const singleCriminal of criminalsToDisplay) {
-        contentTarget.innerHTML += Criminal(singleCriminal)
-    }
+    render(criminalsToDisplay)
 })
+
+const render = criminalsToRender => {
+    contentTarget.innerHTML = criminalsToRender.map(
+        (criminalObject) => {
+            return Criminal(criminalObject)
+        }
+    ).join("")
+}
 
 export const CriminalList = () => {
     const criminals = useCriminals()
-
-    for (const singleCriminal of criminals) {
-        contentTarget.innerHTML += Criminal(singleCriminal)
-    }
+    render(criminals)
 }
-
     
 

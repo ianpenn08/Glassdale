@@ -1,31 +1,33 @@
-import { useWitnesses } from "./WitnessProvider.js";
-import  Witness  from "./Witness.js";
+import { getWitnesses, useWitnesses } from "./WitnessProvider.js"
+import { Witness } from "./Witness.js"
 
-const contentTarget = document.querySelector(".criminalsContainer")
+const contentTarget = document.querySelector(".statementContainer")
 const eventHub = document.querySelector(".container")
+let youCanSeeMe = false
 
-contentTarget.addEventListener("click", clickEvent => {
-    if (clickEvent.target.id.startsWith("witnesses--")) {
-        // Get the id of the criminal that was clicked
-        const [junk, witnessId] = clickEvent.target.id.split("--")
+eventHub.addEventListener("witnessButtonClicked", customEvent => {
+    youCanSeeMe = !youCanSeeMe
 
-        // Yell at the system that a known associates button was clicked
-        const showWitnessesEvent = new CustomEvent("knownWitnessesClicked", {
-            // Make sure to tell the system exactly which criminal button was clicked
-            detail: {
-                chosenWitness: witnessId
-            }
-        })
-
-        eventHub.dispatchEvent(showWitnessesEvent)
+    if (youCanSeeMe) {
+        contentTarget.classList.remove("invisible")
+        render()
+    }
+    else {
+        contentTarget.classList.add("invisible")
     }
 })
 
+const render = () => {
+    getWitnesses().then(
+        () => {
+            const allTheWitnesses = useWitnesses()
 
-export const CriminalList = () => {
-    const criminals = useCriminals()
-
-    for (const singleCriminal of criminals) {
-        contentTarget.innerHTML += Criminal(singleCriminal)
-    }
+            contentTarget.innerHTML = allTheWitnesses.map(
+                (currentWitnessStatementObject) => {
+                    const statementHTML = Witness(currentWitnessStatementObject)
+                    return statementHTML
+                }
+            ).join("")
+        }
+    )
 }

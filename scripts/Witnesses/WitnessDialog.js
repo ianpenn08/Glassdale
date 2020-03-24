@@ -1,44 +1,17 @@
-import { useWitnesses } from "./WitnessProvider.js"
-
-const contentTarget = document.querySelector(".knownWitnessesContainer")
+const contentTarget = document.querySelector(".witness__button")
 const eventHub = document.querySelector(".container")
 
-eventHub.addEventListener("knownWitnessesClicked", customEvent => {
-    // Get the criminal id
-    const witnessId = customEvent.detail.chosenWitness
 
-    const witnessArray = useWitnesses()
+contentTarget.addEventListener("click", clickEvent => {
+    if (clickEvent.target.id === "showStatements") {
+        // Create a custom event to tell any interested component that the user wants to see notes
+        const customEvent = new CustomEvent("witnessButtonClicked")
 
-    // Find returns the very first object that matches the condition in the callback function
-    const iFoundYou = witnessArray.find(
-        (currentWitness) => {
-            if (currentWitness.id === parseInt(witnessId)) {
-                return true
-            }
-            return false
-        }
-    )
-
-    KnownWitnessesDialog(iFoundYou)
-
-    const myFunnyDialog = document.querySelector("#funny")
-    myFunnyDialog.showModal()
+        // Dispatch it to event hub
+        eventHub.dispatchEvent(customEvent)
+    }
 })
 
-export const KnownWitnessesDialog = (witnessObject) => {
-    contentTarget.innerHTML = `
-        <dialog id="funny">
-            ${
-                witnessObject.statements.map(
-                    (currentWitness) => {
-                        return `<div>${currentWitness.name}</div>
-                                <ul>
-                                    <li>${currentWitness.statements}</li>
-                                </ul>
-                        `
-                    }
-                ).join("")
-            }
-        </dialog>
-    `
+export const WitnessStatementButton = () => {
+    contentTarget.innerHTML = "<button id='showStatements'>Witness Statements</button>"
 }

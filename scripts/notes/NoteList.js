@@ -1,25 +1,61 @@
+import { getNotes, useNotes } from "./NoteDataProvider.js"
+import { Note } from "./Note.js"
+import { useCriminals } from "../criminals/CriminalProvider.js"
 
-import { useNotes } from './NoteDataProvider.js'
-import { useCriminals } from '../criminals/CriminalProvider.js'
+const contentTarget = document.querySelector(".notesContainer")
+const eventHub = document.querySelector(".container")
 
+/*
+    State variables
+*/
+let visibility = false
 
-const render = (noteCollection, criminalCollection) => {
-    contentTarget.innerHTML = noteCollection.map(note => {
-        // Find the related criminal
-        const relatedCriminal = criminalCollection.find(criminal => criminal.id === note.criminalId)
+/*
+    Event handlers
+*/
+eventHub.addEventListener("noteStateChanged", customEvent => {
+    render()
+})
 
-        return `
-            <section class="note">
-                <h2>Note about ${relatedCriminal.name}</h2>
-                ${note.noteText}
-            </section>
-        `
+eventHub.addEventListener("allNotesClicked", customEvent => {
+    visibility = !visibility
+
+    if (visibility) {
+        contentTarget.classList.remove("invisible")
+    }
+    else {
+        contentTarget.classList.add("invisible")
+    }
+})
+
+const render = () => {
+    if (visibility) {
+        contentTarget.classList.remove("invisible")
+    }
+    else {
+        contentTarget.classList.add("invisible")
+    }
+
+    getNotes().then(() => {
+        const allTheNotes = useNotes()
+        const allTheCriminals = useCriminals()
+
+        contentTarget.innerHTML = allTheNotes.map(
+            currentNoteObject => {
+
+                // Find the criminal for the current note
+                const theFoundCriminal = allTheCriminals.find(
+                    (currentCriminalObject) => {
+                        return currentNoteObject.criminal === currentCriminalObject.id
+                    }
+                )
+
+                return Note(currentNoteObject, theFoundCriminal)
+            }
+        ).join("")
     })
 }
 
-export const NoteList = () => {
-    const notes = useNotes()
-    const criminals = useCriminals()
-
-    render(notes, criminals)
+export const NotesList = () => {
+    render()
 }
